@@ -1,9 +1,11 @@
+## Docker composer STACK LAMP en la ultima version de las tecnologias
 version: "3.1"
 services:
     www:
+        container_name: lamp-php-74
         build: .
         ports: 
-            - "8001:80"
+            - "8080:80"
         volumes:
             - ./www:/var/www/html/
         links:
@@ -11,15 +13,14 @@ services:
         networks:
             - default
     db:
+        container_name: lamp-mysql8
         image: mysql:8.0
         ports: 
             - "3306:3306"
         command: --default-authentication-plugin=mysql_native_password
         environment:
             MYSQL_DATABASE: myDb
-            MYSQL_USER: user
-            MYSQL_PASSWORD: test
-            MYSQL_ROOT_PASSWORD: test 
+            MYSQL_ROOT_PASSWORD: root
         volumes:
             - ./dump:/docker-entrypoint-initdb.d
             - ./conf:/etc/mysql/conf.d
@@ -27,14 +28,14 @@ services:
         networks:
             - default
     phpmyadmin:
+        container_name: lamp-phpmyadmin
         image: phpmyadmin/phpmyadmin
         links: 
             - db:db
         ports:
-            - 8000:80
+            - 8081:80
         environment:
-            MYSQL_USER: user
-            MYSQL_PASSWORD: test
-            MYSQL_ROOT_PASSWORD: test 
+            MYSQL_USER: root
+            MYSQL_ROOT_PASSWORD: root
 volumes:
     persistent:
